@@ -1,0 +1,36 @@
+{
+  "name": "sryzan-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/pdfkit": "^0.13.9",
+    "@types/swagger-ui-express": "^4.1.8",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "husky": "^9.1.7",
+    "joi": "^17.13.3",
+    "lint-staged": "^15.4.3",
+    "pdfkit": "^0.16.0",
+    "pg": "^8.13.3",
+    "pg-hstore": "^2.3.4",
+    "prettier": "^3.5.2",
+    "sequelize": "^6.37.5",
+    "swagger-ui-express": "^5.0.1",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "ts-node-dev": "^2.0.0"
+  }
+}
