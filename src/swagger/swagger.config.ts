@@ -1,6 +1,6 @@
 export const swaggerOptions = {
   definition: {
-    openapi: '3.0.0',
+    openapi: '3.1.0',
     info: {
       title: 'Sryzan Food Ordering API',
       version: '1.0.0',
@@ -8,7 +8,7 @@ export const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:4000',
         description: 'Development server',
       },
     ],
@@ -42,9 +42,15 @@ export const swaggerOptions = {
             userId: { type: 'integer' },
             restaurantId: { type: 'integer' },
             totalAmount: { type: 'number' },
-            status: { type: 'string', enum: ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'] },
+            status: { 
+              type: 'string', 
+              enum: ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'] 
+            },
             deliveryAddress: { type: 'string' },
-            paymentStatus: { type: 'string', enum: ['pending', 'completed', 'failed'] },
+            paymentStatus: { 
+              type: 'string', 
+              enum: ['pending', 'completed', 'failed'] 
+            },
             paymentMethod: { type: 'string' },
           },
         },
