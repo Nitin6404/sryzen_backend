@@ -11,6 +11,28 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sryzan_network
+
+  api:
+    build: .
+    container_name: sryzan_api
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=sryzan_db
+    networks:
+      - sryzan_network
+
+networks:
+  sryzan_network:
+    driver: bridge
 
 volumes:
   postgres_data:

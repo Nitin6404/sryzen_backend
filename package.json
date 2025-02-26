@@ -2,9 +2,10 @@
   "name": "sryzan-backend",
   "version": "1.0.0",
   "main": "index.js",
- "scripts": {
-    "start": "ts-node-dev src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node-dev src/app.ts",
     "db:seed": "npx sequelize-cli db:seed:all",
     "db:seed:undo": "npx sequelize-cli db:seed:undo:all"
   },
