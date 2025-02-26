@@ -6,8 +6,8 @@ import menuItemRoutes from './routes/menu-item.routes';
 import cartRoutes from './routes/cart.routes';
 import orderRoutes from './routes/order.routes';
 import { errorHandler } from './middleware/error.middleware';
-import { initDatabase } from './config/db.init';
 import dotenv from 'dotenv';
+import db from './models';
 
 dotenv.config();
 
@@ -31,7 +31,10 @@ const PORT = process.env.PORT || 4000;
 
 const startServer = async () => {
   try {
-    await initDatabase();
+    // Initialize database
+    await db.sequelize.sync({ force: false });
+    console.log('Database synchronized successfully');
+    
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

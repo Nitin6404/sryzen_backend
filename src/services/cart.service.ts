@@ -11,12 +11,17 @@ export class CartService {
       }
 
       const cartItem = await Cart.create({
-        ...data,
+        userId: data.userId,
+        menuItemId: data.menuItemId,
+        quantity: data.quantity,
         price: menuItem.price * data.quantity,
+        orderId: null // explicitly set to null for new cart items
       });
 
       return cartItem;
     } catch (error) {
+      console.error('Cart creation error:', error); // Add logging
+      if (error instanceof AppError) throw error;
       throw new AppError(400, 'Error adding item to cart');
     }
   }

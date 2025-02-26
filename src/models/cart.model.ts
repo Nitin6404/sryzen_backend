@@ -1,4 +1,5 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { MenuItem } from './menu.items.model';
 
 export class Cart extends Model {
   public id!: number;
@@ -6,6 +7,10 @@ export class Cart extends Model {
   public menuItemId!: number;
   public quantity!: number;
   public price!: number;
+  public orderId?: number;
+  
+  // Update association property to be non-optional when included
+  public MenuItem!: MenuItem;
 }
 
 export default function (sequelize: Sequelize): typeof Cart {
@@ -32,6 +37,14 @@ export default function (sequelize: Sequelize): typeof Cart {
       price: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
+      },
+      orderId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'orders',
+          key: 'id',
+        },
       },
     },
     {

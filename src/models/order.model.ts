@@ -1,4 +1,6 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Restaurant } from './restaurant.model';
+import { Cart } from './cart.model';
 
 export class Order extends Model {
   public id!: number;
@@ -9,9 +11,12 @@ export class Order extends Model {
   public deliveryAddress!: string;
   public paymentStatus!: string;
   public paymentMethod!: string;
-  // Add timestamp fields
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+
+  // Add association properties
+  public readonly Restaurant?: Restaurant;
+  public readonly CartItems?: Cart[];
 }
 
 export default function (sequelize: Sequelize): typeof Order {
