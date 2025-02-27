@@ -14,8 +14,62 @@ const options = {
         description: 'Development server',
       },
     ],
+      components: {
+        schemas: {
+          Restaurant: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              name: { type: 'string' },
+              address: { type: 'string' },
+              phone: { type: 'string' },
+              email: { type: 'string' },
+            },
+          },
+          MenuItem: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              restaurantId: { type: 'integer' },
+              name: { type: 'string' },
+              description: { type: 'string' },
+              price: { type: 'number' },
+              category: { type: 'string' },
+            },
+          },
+          Order: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              userId: { type: 'integer' },
+              restaurantId: { type: 'integer' },
+              totalAmount: { type: 'number' },
+              status: { 
+                type: 'string', 
+                enum: ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'] 
+              },
+              deliveryAddress: { type: 'string' },
+              paymentStatus: { 
+                type: 'string', 
+                enum: ['pending', 'completed', 'failed'] 
+              },
+              paymentMethod: { type: 'string' },
+            },
+          },
+          Cart: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              userId: { type: 'integer' },
+              menuItemId: { type: 'integer' },
+              quantity: { type: 'integer' },
+              price: { type: 'number' },
+            },
+          },
+        },
+    },
   },
-  apis: ['./src/routes/*.ts'],
+  apis: ['./src/api/routes/*.ts'],
 };
 
 export const swaggerOptions = swaggerJsdoc(options);
