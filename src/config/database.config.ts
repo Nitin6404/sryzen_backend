@@ -3,36 +3,46 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'sryzan_db',
-  process.env.DB_USER || 'postgres',
-  process.env.DB_PASSWORD || 'postgres',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5433'),
-    dialect: 'postgres',
-    logging: false,
-    define: {
-      timestamps: true,
-      underscored: true
-    },
-    dialectOptions: {
-      ssl: process.env.NODE_ENV === 'production' ? {
-        require: true,
-        rejectUnauthorized: false
-      } : false
+const sequelize = new Sequelize(process.env.DATABASE_URL!, {
+  dialect: 'postgres',
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  },
+  retry: {
+    max: 3,
+    backoffBase: 1000,
+    backoffExponent: 1.5
+  }
+});
+
+// Add connection retry logic
+const initializeDatabase = async () => {
+  let retries = 5;
+  while (retries) {
+    try {
+      await sequelize.authenticate();
+      console.log('Database connection established successfully.');
+      break;
+    } catch (err) {
+      console.error('Unable to connect to the database:', err);
+      retries -= 1;
+      if (retries === 0) throw err;
+      console.log(`Retrying connection... (${retries} attempts remaining)`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
-);
+};
 
-// Test the connection
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Database connection established successfully.');
-  })
-  .catch((err) => {
-    console.error('Unable to connect to the database:', err);
-  });
+initializeDatabase();
 
 export default sequelize;

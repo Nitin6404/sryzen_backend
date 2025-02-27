@@ -1,4 +1,5 @@
 import express from 'express';
+// import { Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerOptions } from './swagger/swagger.config';
 import restaurantRoutes from './routes/restaurant.routes';
@@ -25,15 +26,30 @@ app.use('/api/orders', orderRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
 
 // Error Handler
-app.use(errorHandler);
+//@ts-ignore
+app.use((err: Error, req: express.Request, res: express.Response) => {
+  errorHandler(err, res);
+});
 
 const PORT = process.env.PORT || 4000;
 
 const startServer = async () => {
   try {
-    // Initialize database
-    await db.sequelize.sync({ force: false });
-    console.log('Database synchronized successfully');
+    // Initialize database with retries
+    let retries = 5;
+    while (retries) {
+      try {
+        await db.sequelize.sync({ force: false });
+        console.log('Database synchronized successfully');
+        break;
+      } catch (err) {
+        console.error('Database sync failed:', err);
+        retries -= 1;
+        if (retries === 0) throw err;
+        console.log(`Retrying database sync... (${retries} attempts remaining)`);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
     
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

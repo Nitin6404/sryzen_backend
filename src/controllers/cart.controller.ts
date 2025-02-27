@@ -1,4 +1,3 @@
-import { Request, Response, NextFunction } from 'express';
 import { RequestHandler } from 'express';
 import cartService from '../services/cart.service';
 

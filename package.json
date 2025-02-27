@@ -4,10 +4,17 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/app.js",
-    "dev": "ts-node-dev src/app.ts",
+    "start": "node -r dotenv/config dist/app.js",
+    "dev": "ts-node-dev --respawn src/app.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "postinstall": "npm run build",
+    "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "npx sequelize-cli db:seed:all",
-    "db:seed:undo": "npx sequelize-cli db:seed:undo:all"
+    "db:seed:undo": "npx sequelize-cli db:seed:undo:all",
+    "test": "jest",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -27,11 +34,13 @@
     "pg-hstore": "^2.3.4",
     "prettier": "^3.5.2",
     "sequelize": "^6.37.5",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
     "@types/node": "^22.13.5",
+    "@types/swagger-jsdoc": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "sequelize-cli": "^6.6.2",
