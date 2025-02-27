@@ -1,4 +1,4 @@
-import { MenuItem } from '../models/menu.items.model';
+import { MenuItem } from '../../database/models/menu.items.model';
 import { AppError } from '../middleware/error.middleware';
 
 export class MenuItemService {

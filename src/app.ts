@@ -1,14 +1,14 @@
 import express from 'express';
 // import { Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerOptions } from './swagger/swagger.config';
-import restaurantRoutes from './routes/restaurant.routes';
-import menuItemRoutes from './routes/menu-item.routes';
-import cartRoutes from './routes/cart.routes';
-import orderRoutes from './routes/order.routes';
-import { errorHandler } from './middleware/error.middleware';
+import { swaggerOptions } from './config/swagger.config';
+import restaurantRoutes from './api/routes/restaurant.routes';
+import menuItemRoutes from './api/routes/menu-item.routes';
+import cartRoutes from './api/routes/cart.routes';
+import orderRoutes from './api/routes/order.routes';
+import { errorHandler } from './api/middleware/error.middleware';
 import dotenv from 'dotenv';
-import db from './models';
+import db from './database/models';
 
 dotenv.config();
 

@@ -1,7 +1,7 @@
-import { Order } from '../models/order.model';
-import { Cart } from '../models/cart.model';
-import { MenuItem } from '../models/menu.items.model';
-import { Restaurant } from '../models/restaurant.model';
+import { Order } from '../../database/models/order.model';
+import { Cart } from '../../database/models/cart.model';
+import { MenuItem } from '../../database/models/menu.items.model';
+import { Restaurant } from '../../database/models/restaurant.model';
 import { AppError } from '../middleware/error.middleware';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';

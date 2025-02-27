@@ -1,9 +1,9 @@
 import sequelize from './database.config';
 console.log('Sequelize instance:', sequelize);
-import initRestaurant from '../models/restaurant.model';
-import initMenuItem from '../models/menu.items.model';
-import initCart from '../models/cart.model';
-import initOrder from '../models/order.model';
+import initRestaurant from '../database/models/restaurant.model';
+import initMenuItem from '../database/models/menu.items.model';
+import initCart from '../database/models/cart.model';
+import initOrder from '../database/models/order.model';
 
 console.log('Initializing modelss...');
 

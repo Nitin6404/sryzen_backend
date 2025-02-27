@@ -1,4 +1,4 @@
-import { Restaurant } from '../models/restaurant.model';
+import { Restaurant } from '../../database/models/restaurant.model';
 import { AppError } from '../middleware/error.middleware';
 
 export class RestaurantService {

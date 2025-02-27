@@ -1,5 +1,5 @@
-import { Cart } from '../models/cart.model';
-import { MenuItem } from '../models/menu.items.model';
+import { Cart } from '../../database/models/cart.model';
+import { MenuItem } from '../../database/models/menu.items.model';
 import { AppError } from '../middleware/error.middleware';
 
 export class CartService {
