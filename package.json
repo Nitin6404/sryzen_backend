@@ -34,6 +34,7 @@
     "joi-to-swagger": "^6.2.0",
     "jsonwebtoken": "^9.0.2",
     "lint-staged": "^15.4.3",
+    "morgan": "^1.10.0",
     "pdfkit": "^0.16.0",
     "pg": "^8.13.3",
     "pg-hstore": "^2.3.4",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^22.13.5",
     "@types/swagger-jsdoc": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
