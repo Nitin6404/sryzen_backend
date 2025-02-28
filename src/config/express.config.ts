@@ -8,6 +8,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerOptions } from './swagger.config';
+import logger from '../utils/logger';
 
 const server = async () => {
     const app = express();
@@ -35,10 +36,15 @@ const server = async () => {
 
             if (entry.isDirectory()) {
                 await loadRouters(fullPath);
-            } else if (entry.isFile() && entry.name.endsWith('.routes.ts')) {
+            } else if (entry.isFile() && (entry.name.endsWith('.routes.ts') || entry.name.endsWith('.routes.js'))) {
                 const router = require(fullPath);
-                const routePath = `/api/${entry.name.replace('.routes.ts', '')}`;
-                app.use(routePath, router.default);
+                const routePath = `/api/${entry.name.replace(/\.routes\.(ts|js)$/, '')}`;
+                logger.info(`Loading router for path: ${routePath}`);
+                if (router.default) {
+                    app.use(routePath, router.default);
+                } else {
+                    app.use(routePath, router);
+                }
             }
         }
     };
