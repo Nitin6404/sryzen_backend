@@ -3,7 +3,7 @@ import { RequestHandler } from 'express';
 import restaurantController from '../controllers/restaurant.controller';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createRestaurantSchema, updateRestaurantSchema } from '../validators/restaurant.validator';
-import { auth, adminAuth } from '../middleware/auth.middleware';
+import { adminAuth } from '../middleware/auth.middleware';
 
 const router = Router();
 

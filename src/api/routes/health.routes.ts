@@ -3,7 +3,7 @@ import db from '../../database/models';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   try {
     await db.sequelize.authenticate();
     res.json({ status: 'healthy', database: 'connected' });

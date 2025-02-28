@@ -3,7 +3,7 @@ import { RequestHandler } from 'express';
 import menuItemController from '../controllers/menu-item.controller';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createMenuItemSchema, updateMenuItemSchema } from '../validators/menu-item.validator';
-import { auth, adminAuth } from '../middleware/auth.middleware';
+import { adminAuth } from '../middleware/auth.middleware';
 
 const router = Router();
 

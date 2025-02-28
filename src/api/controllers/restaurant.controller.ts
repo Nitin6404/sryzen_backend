@@ -11,7 +11,7 @@ export class RestaurantController {
     }
   }
 
-  async findAll(req: Request, res: Response, next: NextFunction) {
+  async findAll(_req: Request, res: Response, next: NextFunction) {
     try {
       const restaurants = await restaurantService.findAll();
       res.json(restaurants);

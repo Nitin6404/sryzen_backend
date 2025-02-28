@@ -1,4 +1,5 @@
 {
+
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
@@ -12,12 +13,32 @@
     "pretty": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*", "src/types/*"]
+      "@/*": ["src/*"],
+      "@types/*": ["src/types/*"],
+      "@models/*": ["src/database/models/*"],
+      "@config/*": ["src/config/*"],
+      "@utils/*": ["src/utils/*"],
+      "@services/*": ["src/api/services/*"],
+      "@controllers/*": ["src/api/controllers/*"],
+      "@middleware/*": ["src/api/middleware/*"],
+      "@validators/*": ["src/api/validators/*"]
     },
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

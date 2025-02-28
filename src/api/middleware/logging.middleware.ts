@@ -28,7 +28,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-export const errorLogger = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorLogger = (err: Error, req: Request, _res: Response, next: NextFunction) => {
   logger.error('Error occurred', {
     error: {
       message: err.message,
