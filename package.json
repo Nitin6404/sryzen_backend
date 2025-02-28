@@ -24,10 +24,14 @@
     "@types/express": "^5.0.0",
     "@types/pdfkit": "^0.13.9",
     "@types/swagger-ui-express": "^4.1.8",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "helmet": "^8.0.0",
     "husky": "^9.1.7",
     "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "lint-staged": "^15.4.3",
     "pdfkit": "^0.16.0",
     "pg": "^8.13.3",
@@ -40,6 +44,8 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.5",
     "@types/swagger-jsdoc": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^8.25.0",

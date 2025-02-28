@@ -15,6 +15,13 @@ const options = {
       },
     ],
       components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT'
+          }
+        },
         schemas: {
           Restaurant: {
             type: 'object',
@@ -66,8 +73,34 @@ const options = {
               price: { type: 'number' },
             },
           },
+          User: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              email: { type: 'string' },
+              name: { type: 'string' },
+              role: { 
+                type: 'string',
+                enum: ['user', 'admin']
+              }
+            },
+          },
+          schemas: {
+            User: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                email: { type: 'string' },
+                name: { type: 'string' },
+                role: { 
+                  type: 'string',
+                  enum: ['user', 'admin']
+                }
+              }
+            },
+          },
         },
-    },
+      },
   },
   apis: ['./src/api/routes/*.ts'],
 };

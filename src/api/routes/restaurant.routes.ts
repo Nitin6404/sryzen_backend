@@ -3,6 +3,7 @@ import { RequestHandler } from 'express';
 import restaurantController from '../controllers/restaurant.controller';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createRestaurantSchema, updateRestaurantSchema } from '../validators/restaurant.validator';
+import { auth, adminAuth } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -216,7 +217,10 @@ const deleteRestaurant: RequestHandler = async (req, res, next): Promise<void> =
   }
 };
 
-router.post('/', validateRequest(createRestaurantSchema), createRestaurant);
+// Protected routes
+router.post('/', adminAuth, validateRequest(createRestaurantSchema), createRestaurant);
+router.put('/:id', adminAuth, validateRequest(updateRestaurantSchema), updateRestaurant);
+router.delete('/:id', adminAuth, deleteRestaurant);
 router.get('/', getAllRestaurants);
 router.get('/:id', getRestaurantById);
 router.put('/:id', validateRequest(updateRestaurantSchema), updateRestaurant);

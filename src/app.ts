@@ -1,5 +1,4 @@
 import express from 'express';
-// import { Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerOptions } from './config/swagger.config';
 import restaurantRoutes from './api/routes/restaurant.routes';
@@ -7,6 +6,9 @@ import menuItemRoutes from './api/routes/menu-item.routes';
 import cartRoutes from './api/routes/cart.routes';
 import orderRoutes from './api/routes/order.routes';
 import { errorHandler } from './api/middleware/error.middleware';
+import authRoutes from './api/routes/auth.routes';
+import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import db from './database/models';
 
@@ -16,7 +18,14 @@ const app = express();
 
 app.use(express.json());
 
+app.use(helmet());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true
+}));
+
 // Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menu-items', menuItemRoutes);
 app.use('/api/cart', cartRoutes);
@@ -26,10 +35,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
 
 // Error Handler
-//@ts-ignore
-app.use((err: Error, req: express.Request, res: express.Response) => {
-  errorHandler(err, res);
-});
+app.use(errorHandler); // Use the error handler with the correct signature
 
 const PORT = process.env.PORT || 4000;
 

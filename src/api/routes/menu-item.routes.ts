@@ -3,6 +3,7 @@ import { RequestHandler } from 'express';
 import menuItemController from '../controllers/menu-item.controller';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createMenuItemSchema, updateMenuItemSchema } from '../validators/menu-item.validator';
+import { auth, adminAuth } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -208,9 +209,15 @@ const deleteMenuItem: RequestHandler = async (req, res, next) => {
 };
 
 router.post('/', validateRequest(createMenuItemSchema), createMenuItem);
+
+// Mixed access routes
 router.get('/', getAllMenuItems);
 router.get('/:id', getMenuItemById);
-router.put('/:id', validateRequest(updateMenuItemSchema), updateMenuItem);
-router.delete('/:id', deleteMenuItem);
+// router.get('/restaurant/:restaurantId', getMenuItemsByRestaurant);
+
+// Admin only routes
+router.post('/', adminAuth, validateRequest(createMenuItemSchema), createMenuItem);
+router.put('/:id', adminAuth, validateRequest(updateMenuItemSchema), updateMenuItem);
+router.delete('/:id', adminAuth, deleteMenuItem);
 
 export default router;
