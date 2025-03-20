@@ -17,8 +17,10 @@ const PORT = process.env.PORT || 4000;
     let retries = 5;
     while (retries) {
       try {
-        await db.sequelize.sync({ force: false });
-        logger.info('Database synchronized successfully');
+        // Force sync in development to update table structure
+        const force = process.env.NODE_ENV === 'development';
+        await db.sequelize.sync({ force });
+        logger.info(`Database synchronized successfully (force: ${force})`);
         break;
       } catch (err) {
         logger.error('Database sync failed:', err);

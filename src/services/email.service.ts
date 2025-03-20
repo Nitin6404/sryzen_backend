@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { AppError } from '../api/middleware/error.middleware';
+import logger from '../utils/logger';
 
 class EmailService {
   private transporter: nodemailer.Transporter;
@@ -20,6 +21,9 @@ class EmailService {
     const verificationUrl = `${process.env.FRONTEND_URL}/auth/verify-email?token=${token}`;
 
     try {
+      await this.transporter.verify(); // Verify SMTP connection
+      logger.info('SMTP connection verified successfully');
+
       await this.transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: email,
@@ -31,7 +35,9 @@ class EmailService {
           <p>If you didn't create an account, you can safely ignore this email.</p>
         `,
       });
+      logger.info('Verification email sent successfully');
     } catch (error) {
+      logger.error('Email error:', error);
       throw new AppError(500, 'Failed to send verification email');
     }
   }
@@ -40,6 +46,9 @@ class EmailService {
     const resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password?token=${token}`;
 
     try {
+      await this.transporter.verify(); // Verify SMTP connection
+      logger.info('SMTP connection verified successfully');
+
       await this.transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: email,
@@ -52,7 +61,9 @@ class EmailService {
           <p>This link will expire in 1 hour.</p>
         `,
       });
+      logger.info('Password reset email sent successfully');
     } catch (error) {
+      logger.error('Email error:', error);
       throw new AppError(500, 'Failed to send password reset email');
     }
   }
