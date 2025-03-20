@@ -15,7 +15,7 @@ export class CartService {
         menuItemId: data.menuItemId,
         quantity: data.quantity,
         price: menuItem.price * data.quantity,
-        orderId: null // explicitly set to null for new cart items
+        orderId: null, // explicitly set to null for new cart items
       });
 
       return cartItem;

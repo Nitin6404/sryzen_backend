@@ -14,15 +14,15 @@ const sequelize = new Sequelize(process.env.DATABASE_URL!, {
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: false,
+    },
   },
   pool: {
     max: 5,
     min: 0,
     acquire: 30000,
-    idle: 10000
-  }
+    idle: 10000,
+  },
 });
 
 // Initialize models
@@ -60,7 +60,7 @@ const db = {
   Restaurant,
   MenuItem,
   Cart,
-  Order
+  Order,
 };
 
 export default db;

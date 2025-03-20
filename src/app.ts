@@ -9,36 +9,35 @@ dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 (async () => {
-    try {
-        // Initialize Express app
-        const app = await serverConfig();
+  try {
+    // Initialize Express app
+    const app = await serverConfig();
 
-        // Initialize database with retries
-        let retries = 5;
-        while (retries) {
-            try {
-                await db.sequelize.sync({ force: false });
-                logger.info('Database synchronized successfully');
-                break;
-            } catch (err) {
-                logger.error('Database sync failed:', err);
-                retries -= 1;
-                if (retries === 0) throw err;
-                logger.info(`Retrying database sync... (${retries} attempts remaining)`);
-                await new Promise(resolve => setTimeout(resolve, 5000));
-            }
-        }
-
-        // Create HTTP server
-        const server = http.createServer(app);
-
-        // Start server
-        server.listen(PORT, () => {
-            logger.info(`Server is running on port ${PORT}`);
-        });
-
-    } catch (error) {
-        logger.error('Failed to start server:', error);
-        process.exit(1);
+    // Initialize database with retries
+    let retries = 5;
+    while (retries) {
+      try {
+        await db.sequelize.sync({ force: false });
+        logger.info('Database synchronized successfully');
+        break;
+      } catch (err) {
+        logger.error('Database sync failed:', err);
+        retries -= 1;
+        if (retries === 0) throw err;
+        logger.info(`Retrying database sync... (${retries} attempts remaining)`);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
     }
+
+    // Create HTTP server
+    const server = http.createServer(app);
+
+    // Start server
+    server.listen(PORT, () => {
+      logger.info(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
 })();

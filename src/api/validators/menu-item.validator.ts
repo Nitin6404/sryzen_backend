@@ -10,5 +10,5 @@ export const createMenuItemSchema = Joi.object({
 
 export const updateMenuItemSchema = createMenuItemSchema.fork(
   ['restaurantId', 'name', 'description', 'price', 'category'],
-  (schema) => schema.optional()
+  (schema) => schema.optional(),
 );

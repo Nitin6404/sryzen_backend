@@ -14,7 +14,9 @@ export class MenuItemController {
   async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { restaurantId } = req.query;
-      const menuItems = await menuItemService.findAll(restaurantId ? Number(restaurantId) : undefined);
+      const menuItems = await menuItemService.findAll(
+        restaurantId ? Number(restaurantId) : undefined,
+      );
       res.json(menuItems);
     } catch (error) {
       next(error);

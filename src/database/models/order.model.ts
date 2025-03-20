@@ -40,7 +40,14 @@ export default function (sequelize: Sequelize): typeof Order {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'),
+        type: DataTypes.ENUM(
+          'pending',
+          'confirmed',
+          'preparing',
+          'ready',
+          'delivered',
+          'cancelled',
+        ),
         defaultValue: 'pending',
       },
       deliveryAddress: {
@@ -60,7 +67,7 @@ export default function (sequelize: Sequelize): typeof Order {
       sequelize,
       tableName: 'orders',
       timestamps: true, // Ensure timestamps are enabled
-    }
+    },
   );
 
   return Order;

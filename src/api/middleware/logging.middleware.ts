@@ -11,7 +11,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
     query: req.query,
     body: req.body,
     ip: req.ip,
-    userAgent: req.get('user-agent')
+    userAgent: req.get('user-agent'),
   });
 
   // Log response
@@ -21,7 +21,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
       method: req.method,
       url: req.url,
       status: res.statusCode,
-      duration: `${duration}ms`
+      duration: `${duration}ms`,
     });
   });
 
@@ -32,12 +32,12 @@ export const errorLogger = (err: Error, req: Request, _res: Response, next: Next
   logger.error('Error occurred', {
     error: {
       message: err.message,
-      stack: err.stack
+      stack: err.stack,
     },
     method: req.method,
     url: req.url,
     body: req.body,
-    query: req.query
+    query: req.query,
   });
   next(err);
 };

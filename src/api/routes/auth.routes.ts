@@ -1,9 +1,22 @@
 import { Router } from 'express';
 import { validateRequest } from '../middleware/validate.middleware';
-import { registerSchema, loginSchema } from '../validators/auth.validator';
+import {
+  registerSchema,
+  loginSchema,
+  emailSchema,
+  resetPasswordSchema,
+  refreshTokenSchema,
+} from '../validators/auth.validator';
 import authController from '../controllers/auth.controller';
+import rateLimit from 'express-rate-limit';
 
 const router = Router();
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 requests per windowMs
+  message: 'Too many attempts from this IP, please try again after 15 minutes',
+});
 
 /**
  * @swagger
@@ -58,6 +71,101 @@ router.post('/register', validateRequest(registerSchema), authController.registe
  *       200:
  *         description: Login successful
  */
-router.post('/login', validateRequest(loginSchema), authController.login);
+router.post('/login', authLimiter, validateRequest(loginSchema), authController.login);
+
+/**
+ * @swagger
+ * /api/auth/verify-email/{token}:
+ *   get:
+ *     summary: Verify email address
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Email verified successfully
+ */
+router.get('/verify-email/:token', authController.verifyEmail);
+
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Request password reset
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password reset email sent
+ */
+router.post(
+  '/forgot-password',
+  authLimiter,
+  validateRequest(emailSchema),
+  authController.forgotPassword,
+);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *     summary: Reset password
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - newPassword
+ *             properties:
+ *               token:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ */
+router.post('/reset-password', validateRequest(resetPasswordSchema), authController.resetPassword);
+
+/**
+ * @swagger
+ * /api/auth/refresh-token:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: New access token generated
+ */
+router.post('/refresh-token', validateRequest(refreshTokenSchema), authController.refreshToken);
 
 export default router;

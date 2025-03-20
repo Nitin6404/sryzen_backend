@@ -8,7 +8,7 @@ export class Cart extends Model {
   public quantity!: number;
   public price!: number;
   public orderId?: number;
-  
+
   // Update association property to be non-optional when included
   public MenuItem!: MenuItem;
 }
@@ -50,7 +50,7 @@ export default function (sequelize: Sequelize): typeof Cart {
     {
       sequelize,
       tableName: 'carts',
-    }
+    },
   );
 
   return Cart;

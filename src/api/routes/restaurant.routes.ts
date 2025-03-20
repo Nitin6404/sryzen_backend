@@ -52,7 +52,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/restaurants:
+ * /api/restaurant:
  *   post:
  *     summary: Create a new restaurant
  *     tags: [Restaurants]
@@ -82,7 +82,7 @@ const createRestaurant: RequestHandler = async (req, res, next): Promise<void> =
 
 /**
  * @swagger
- * /api/restaurants:
+ * /api/restaurant:
  *   get:
  *     summary: Get all restaurants
  *     tags: [Restaurants]

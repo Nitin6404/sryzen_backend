@@ -25,7 +25,7 @@ export class CartController {
       const cartItem = await cartService.updateCartItem(
         Number(req.params.id),
         Number(req.params.userId),
-        req.body
+        req.body,
       );
       res.json(cartItem);
     } catch (error) {
@@ -37,7 +37,7 @@ export class CartController {
     try {
       const result = await cartService.removeFromCart(
         Number(req.params.id),
-        Number(req.params.userId)
+        Number(req.params.userId),
       );
       res.json(result);
     } catch (error) {

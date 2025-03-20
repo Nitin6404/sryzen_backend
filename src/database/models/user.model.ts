@@ -7,6 +7,10 @@ export class User extends Model {
   public password!: string;
   public name!: string;
   public role!: 'user' | 'admin';
+  public isVerified!: boolean;
+  public resetPasswordToken?: string;
+  public resetPasswordExpires?: Date;
+  public verificationToken?: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
@@ -43,6 +47,22 @@ export default function (sequelize: Sequelize): typeof User {
         type: DataTypes.ENUM('user', 'admin'),
         defaultValue: 'user',
       },
+      isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      resetPasswordToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      resetPasswordExpires: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      verificationToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       sequelize,
@@ -57,7 +77,7 @@ export default function (sequelize: Sequelize): typeof User {
           }
         },
       },
-    }
+    },
   );
 
   return User;

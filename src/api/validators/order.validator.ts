@@ -7,5 +7,7 @@ export const createOrderSchema = Joi.object({
 });
 
 export const updateOrderStatusSchema = Joi.object({
-  status: Joi.string().required().valid('pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'),
+  status: Joi.string()
+    .required()
+    .valid('pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'),
 });
