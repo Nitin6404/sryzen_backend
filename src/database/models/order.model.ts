@@ -13,6 +13,7 @@ export class Order extends Model {
   public paymentMethod!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public price!: number;
 
   // Add association properties
   public readonly Restaurant?: Restaurant;
@@ -61,6 +62,11 @@ export default function (sequelize: Sequelize): typeof Order {
       paymentMethod: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0,
       },
     },
     {

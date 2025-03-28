@@ -66,10 +66,13 @@ export default function (sequelize: Sequelize): typeof User {
     },
     {
       sequelize,
+      modelName: 'User',
       tableName: 'users',
       hooks: {
         beforeCreate: async (user: User) => {
-          user.password = await bcrypt.hash(user.password, 10);
+          if (user.password) {
+            user.password = await bcrypt.hash(user.password, 10);
+          }
         },
         beforeUpdate: async (user: User) => {
           if (user.changed('password')) {

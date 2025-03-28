@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import serverConfig from './config/express.config';
 import db from './database/models';
 import logger from './utils/logger';
+import { seedAdmin } from './database/seeders/admin.seeder';
 
 dotenv.config();
 
@@ -30,6 +31,9 @@ const PORT = process.env.PORT || 4000;
         await new Promise((resolve) => setTimeout(resolve, 5000));
       }
     }
+
+    // Seed admin user
+    await seedAdmin();
 
     // Create HTTP server
     const server = http.createServer(app);
