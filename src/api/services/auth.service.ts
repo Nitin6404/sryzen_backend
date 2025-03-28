@@ -96,6 +96,7 @@ export class AuthService {
     try {
       const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as { userId: number };
       const { accessToken, refreshToken } = this.generateTokens(decoded.userId);
+      console.log(accessToken, refreshToken); // Add this line to log the values of accessToken and refreshToken
       return { accessToken, refreshToken };
     } catch (error) {
       throw new AppError(401, 'Invalid refresh token');

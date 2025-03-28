@@ -76,6 +76,7 @@ export class AdminService {
         dailyRevenue: formattedDailyRevenue,
       };
     } catch (error) {
+      console.log('Error fetching dashboard statistics:', error);
       throw new AppError(500, 'Error fetching dashboard statistics');
     }
   }

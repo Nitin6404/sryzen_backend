@@ -13,9 +13,8 @@ export const authenticate = (req: AuthRequest, _res: Response, next: NextFunctio
     if (!token) {
       throw new ApiError(401, 'No token provided');
     }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number };
-    User.findByPk(decoded.id)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: number };
+    User.findByPk(decoded.userId)
       .then((user) => {
         if (!user) {
           throw new ApiError(401, 'Invalid token');

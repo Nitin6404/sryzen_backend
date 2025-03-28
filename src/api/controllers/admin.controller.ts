@@ -30,6 +30,7 @@ class AdminController {
         data: stats,
       });
     } catch (error: unknown) {
+      console.log(error);
       next(new ApiError(500, 'Error fetching dashboard stats'));
     }
   }

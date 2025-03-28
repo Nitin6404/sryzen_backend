@@ -1,3 +1,5 @@
+import logger from '../../utils/logger';
+
 export class ApiError extends Error {
   statusCode: number;
   status: string;
@@ -10,5 +12,16 @@ export class ApiError extends Error {
     this.isOperational = isOperational;
 
     Error.captureStackTrace(this, this.constructor);
+  }
+
+  logError() {
+    logger.error(
+      'ApiError: ',
+      this.message,
+      this.stack,
+      this.statusCode,
+      this.status,
+      this.isOperational,
+    );
   }
 }
