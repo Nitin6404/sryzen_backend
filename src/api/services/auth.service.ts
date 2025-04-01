@@ -56,6 +56,20 @@ export class AuthService {
     return { message: 'Email verified successfully' };
   }
 
+  async resendVerificationEmail(email: string) {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      throw new AppError(404, 'User not found');
+    } else if (user.isVerified) {
+      throw new AppError(400, 'Email already verified');
+    }
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    user.verificationToken = verificationToken;
+    await user.save();
+    await emailService.sendVerificationEmail(email, verificationToken);
+    return { message: 'Verification email resent' };
+  }
+
   async forgotPassword(email: string) {
     const user = await User.findOne({ where: { email } });
     if (!user) {

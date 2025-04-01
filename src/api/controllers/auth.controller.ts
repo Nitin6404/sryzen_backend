@@ -31,6 +31,16 @@ export class AuthController {
     }
   }
 
+  async resendVerificationEmail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      const result = await authService.resendVerificationEmail(email);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async forgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { email } = req.body;
