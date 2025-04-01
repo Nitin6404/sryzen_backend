@@ -26,6 +26,8 @@ export const createRestaurantSchema = Joi.object({
   description: Joi.string().optional().max(500),
   address: Joi.string().required().min(5).max(200),
   isActive: Joi.boolean().default(true),
+  email: Joi.string().email().required(),
+  phone: Joi.string().required().length(10),
 });
 
 export const updateRestaurantSchema = createRestaurantSchema
