@@ -1,6 +1,7 @@
 import { User } from '../../database/models/user.model';
 import { Restaurant } from '../../database/models/restaurant.model';
 import { Order } from '../../database/models/order.model';
+import { MenuItem } from '../../database/models/menu.items.model';
 import { AppError } from '../middleware/error.middleware';
 import { Op, Sequelize } from 'sequelize';
 
@@ -10,6 +11,8 @@ interface PaginationOptions {
   search?: string;
   sortBy?: string;
   order?: 'ASC' | 'DESC';
+  restaurantId?: number;
+  category?: string;
 }
 
 interface DashboardStats {
@@ -144,6 +147,91 @@ export class AdminService {
     } catch (error) {
       if (error instanceof AppError) throw error;
       throw new AppError(500, 'Error updating user');
+    }
+  }
+
+  async getMenuItems(options: PaginationOptions = {}) {
+    try {
+      const {
+        page = 1,
+        limit = 10,
+        search = '',
+        sortBy = 'createdAt',
+        order = 'DESC',
+        restaurantId,
+        category,
+      } = options;
+      const offset = (page - 1) * limit;
+
+      const where: any = {};
+      if (search) {
+        where.name = { [Op.iLike]: `%${search}%` };
+      }
+      if (restaurantId) {
+        where.restaurantId = restaurantId;
+      }
+      if (category) {
+        where.category = category;
+      }
+
+      const { rows: menuItems, count: total } = await MenuItem.findAndCountAll({
+        where,
+        include: [{ model: Restaurant, attributes: ['id', 'name'] }],
+        order: [[sortBy, order]],
+        limit,
+        offset,
+      });
+
+      return {
+        menuItems,
+        pagination: {
+          total,
+          page,
+          totalPages: Math.ceil(total / limit),
+        },
+      };
+    } catch (error) {
+      throw new AppError(500, 'Error fetching menu items');
+    }
+  }
+
+  async createMenuItem(data: Partial<MenuItem>) {
+    try {
+      const restaurant = await Restaurant.findByPk(data.restaurantId);
+      if (!restaurant) {
+        throw new AppError(404, 'Restaurant not found');
+      }
+      return await MenuItem.create(data);
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new AppError(400, 'Error creating menu item');
+    }
+  }
+
+  async updateMenuItem(id: number, updates: Partial<MenuItem>) {
+    try {
+      const menuItem = await MenuItem.findByPk(id);
+      if (!menuItem) {
+        throw new AppError(404, 'Menu item not found');
+      }
+      await menuItem.update(updates);
+      return menuItem;
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new AppError(500, 'Error updating menu item');
+    }
+  }
+
+  async deleteMenuItem(id: number) {
+    try {
+      const menuItem = await MenuItem.findByPk(id);
+      if (!menuItem) {
+        throw new AppError(404, 'Menu item not found');
+      }
+      await menuItem.destroy();
+    } catch (error) {
+      if (error instanceof AppError) throw error;
+      throw new AppError(500, 'Error deleting menu item');
     }
   }
 

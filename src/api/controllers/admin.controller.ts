@@ -13,6 +13,7 @@ interface PaginatedRequest extends Request {
     category?: string;
     startDate?: string;
     endDate?: string;
+    restaurantId?: string;
   };
 }
 
@@ -112,6 +113,83 @@ class AdminController {
       });
     } catch (error: unknown) {
       next(new ApiError(500, 'Error fetching restaurants'));
+    }
+  }
+
+  public async getMenuItems(
+    req: PaginatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { page, limit, search, sortBy, order, restaurantId, category } = req.query;
+      const result = await adminService.getMenuItems({
+        page: page ? parseInt(page) : undefined,
+        limit: limit ? parseInt(limit) : undefined,
+        search,
+        sortBy,
+        order,
+        restaurantId: restaurantId ? parseInt(restaurantId) : undefined,
+        category,
+      });
+
+      res.status(200).json({
+        success: true,
+        data: result.menuItems,
+        pagination: result.pagination,
+      });
+    } catch (error: unknown) {
+      next(new ApiError(500, 'Error fetching menu items'));
+    }
+  }
+
+  public async createMenuItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const menuItem = await adminService.createMenuItem(req.body);
+      res.status(201).json({
+        success: true,
+        data: menuItem,
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === 'Restaurant not found') {
+        next(new ApiError(404, 'Restaurant not found'));
+      } else {
+        next(new ApiError(500, 'Error creating menu item'));
+      }
+    }
+  }
+
+  public async updateMenuItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const menuItem = await adminService.updateMenuItem(parseInt(id), req.body);
+      res.status(200).json({
+        success: true,
+        data: menuItem,
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === 'Menu item not found') {
+        next(new ApiError(404, 'Menu item not found'));
+      } else {
+        next(new ApiError(500, 'Error updating menu item'));
+      }
+    }
+  }
+
+  public async deleteMenuItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      await adminService.deleteMenuItem(parseInt(id));
+      res.status(200).json({
+        success: true,
+        message: 'Menu item deleted successfully',
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message === 'Menu item not found') {
+        next(new ApiError(404, 'Menu item not found'));
+      } else {
+        next(new ApiError(500, 'Error deleting menu item'));
+      }
     }
   }
 

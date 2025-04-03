@@ -10,6 +10,8 @@ import {
   updateOrderSchema,
   orderAnalyticsSchema,
   paginationSchema,
+  createMenuItemSchema,
+  updateMenuItemSchema,
 } from '../validators/admin.validator';
 
 const router = Router();
@@ -105,6 +107,36 @@ router.delete('/restaurants/:id', adminController.deleteRestaurant);
 router.get('/orders', validateRequest(paginationSchema), adminController.getOrders);
 router.patch('/orders/:id', validateRequest(updateOrderSchema), adminController.updateOrder);
 router.delete('/orders/:id', adminController.deleteOrder);
+
+/**
+ * @swagger
+ * /api/admin/menu-items:
+ *   get:
+ *     summary: Get all menu items with pagination and filters
+ *     tags: [Admin]
+ *     parameters:
+ *       - $ref: '#/components/parameters/pageParam'
+ *       - $ref: '#/components/parameters/limitParam'
+ *       - $ref: '#/components/parameters/searchParam'
+ *       - name: restaurantId
+ *         in: query
+ *         schema:
+ *           type: integer
+ *         description: Filter by restaurant ID
+ *       - name: category
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Filter by category
+ */
+router.get('/menu-items', validateRequest(paginationSchema), adminController.getMenuItems);
+router.post('/menu-items', validateRequest(createMenuItemSchema), adminController.createMenuItem);
+router.patch(
+  '/menu-items/:id',
+  validateRequest(updateMenuItemSchema),
+  adminController.updateMenuItem,
+);
+router.delete('/menu-items/:id', adminController.deleteMenuItem);
 
 /**
  * @swagger

@@ -42,6 +42,23 @@ export const updateOrderSchema = Joi.object({
   note: Joi.string().optional().max(500),
 });
 
+// Menu item management validation schemas
+export const createMenuItemSchema = Joi.object({
+  name: Joi.string().required().min(2).max(100),
+  description: Joi.string().optional().max(500),
+  price: Joi.number().required().min(0),
+  category: Joi.string().required(),
+  isAvailable: Joi.boolean().default(true),
+  restaurantId: Joi.number().required().integer().min(1),
+  image: Joi.string().optional().uri(),
+});
+
+export const updateMenuItemSchema = createMenuItemSchema
+  .fork(['name', 'description', 'price', 'category', 'isAvailable', 'image'], (schema) =>
+    schema.optional(),
+  )
+  .min(1);
+
 // Analytics validation schema
 export const orderAnalyticsSchema = Joi.object({
   startDate: Joi.date().iso(),
