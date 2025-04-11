@@ -70,6 +70,16 @@ export class AuthController {
       next(error);
     }
   }
+
+  async getUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.body.userId;
+      const user = await authService.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new AuthController();

@@ -117,6 +117,14 @@ export class AuthService {
     }
   }
 
+  async getUser(userId: number) {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new AppError(404, 'User not found');
+    }
+    return user;
+  }
+
   private generateTokens(userId: number) {
     const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET!, { expiresIn: '15m' });
 

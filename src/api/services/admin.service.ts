@@ -348,6 +348,15 @@ export class AdminService {
     }
   }
 
+  // Create order from admin side 
+  async createOrder(data: Partial<Order>) {
+    try {
+      return await Order.create(data);
+    } catch (error) {
+      throw new AppError(400, 'Error creating order');
+    }
+  }
+
   async updateOrder(id: number, updates: { status: string; note?: string }) {
     try {
       const order = await Order.findByPk(id);

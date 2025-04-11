@@ -196,4 +196,18 @@ router.post('/reset-password', validateRequest(resetPasswordSchema), authControl
  */
 router.post('/refresh-token', validateRequest(refreshTokenSchema), authController.refreshToken);
 
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   get:
+ *     summary: Get user profile
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile retrieved
+ */
+router.get('/profile', authController.getUser);
+
 export default router;
