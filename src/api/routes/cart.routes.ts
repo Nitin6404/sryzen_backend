@@ -231,10 +231,10 @@ const clearCart: RequestHandler = async (req, res, next) => {
   await cartController.clearCart(req, res, next);
 };
 
-router.get('/', getUserCart);
-router.post('/items', validateRequest(addToCartSchema), addToCart);
+router.get('/:userId/items', getUserCart);
+router.post('/:userId/items', validateRequest(addToCartSchema), addToCart);
 router.put('/items/:id', validateRequest(updateCartItemSchema), updateCartItem);
-router.delete('/items/:id', removeFromCart);
+router.delete('/:userId/items/:id', removeFromCart);
 router.delete('/', clearCart);
 
 export default router;

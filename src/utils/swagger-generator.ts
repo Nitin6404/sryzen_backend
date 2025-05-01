@@ -50,6 +50,7 @@ export class SwaggerGenerator {
         description: 'API Server',
       },
     ];
+    this.document.security = [{ bearerAuth: [] }]; 
   }
 
   static addRoute(
@@ -61,6 +62,7 @@ export class SwaggerGenerator {
       description,
       requestSchema,
       responseSchema,
+      parameters = [],
       security = true,
     }: {
       tags: string[];
@@ -68,6 +70,7 @@ export class SwaggerGenerator {
       description: string;
       requestSchema?: Schema;
       responseSchema?: Schema;
+      parameters?: any[]; // <-- NEW!
       security?: boolean;
     },
   ) {
@@ -87,6 +90,10 @@ export class SwaggerGenerator {
         },
       },
     };
+
+    if (parameters.length > 0) {
+      routeDoc.parameters = parameters;
+    }
 
     if (security) {
       routeDoc.security = [{ bearerAuth: [] }];

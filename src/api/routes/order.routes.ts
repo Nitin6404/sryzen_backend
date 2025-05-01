@@ -3,7 +3,7 @@ import { RequestHandler } from 'express';
 import orderController from '../controllers/order.controller';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createOrderSchema, updateOrderStatusSchema } from '../validators/order.validator';
-import { auth } from '../middleware/auth.middleware';
+// import { auth } from '../middleware/auth.middleware';
 
 const router = Router();
 
@@ -236,11 +236,11 @@ const downloadInvoice: RequestHandler = async (req, res, next) => {
 };
 
 // Protected routes
-router.post('/:userId', auth, validateRequest(createOrderSchema), createOrder);
-router.get('/:userId', auth, getUserOrders);
-// router.get('/:userId/:orderId', auth, getOrderDetails);
-router.get('/detail/:id', auth, getOrderById);
-router.put('/:orderId/status', auth, validateRequest(updateOrderStatusSchema), updateOrderStatus);
+router.post('/:userId', validateRequest(createOrderSchema), createOrder);
+router.get('/:userId', getUserOrders);
+// router.get('/:userId/:orderId', getOrderDetails);
+router.get('/detail/:id', getOrderById);
+router.put('/:orderId/status', validateRequest(updateOrderStatusSchema), updateOrderStatus);
 router.get('/:id/invoice', downloadInvoice);
 
 export default router;

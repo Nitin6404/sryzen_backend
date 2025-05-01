@@ -68,33 +68,44 @@ SwaggerGenerator.addRoute('/api/restaurants/:id', SwaggerMethod.DELETE, {
 });
 
 // Menu Item Routes
-SwaggerGenerator.addRoute('/api/menu-items', SwaggerMethod.GET, {
+SwaggerGenerator.addRoute('/api/menu-item', SwaggerMethod.GET, {
   tags: ['Menu Items'],
   summary: 'Get all menu items',
   description: 'Retrieve all menu items',
 });
 
-SwaggerGenerator.addRoute('/api/menu-items/:id', SwaggerMethod.GET, {
+SwaggerGenerator.addRoute('/api/menu-item/:id', SwaggerMethod.GET, {
   tags: ['Menu Items'],
   summary: 'Get menu item by ID',
   description: 'Retrieve a specific menu item',
+  parameters: [
+    {
+      name: 'id',
+      in: 'path',
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+      description: 'Menu item ID',
+    },
+  ],
 });
 
-SwaggerGenerator.addRoute('/api/menu-items', SwaggerMethod.POST, {
+SwaggerGenerator.addRoute('/api/menu-item', SwaggerMethod.POST, {
   tags: ['Menu Items'],
   summary: 'Create menu item',
   description: 'Create a new menu item (Admin only)',
   requestSchema: createMenuItemSchema,
 });
 
-SwaggerGenerator.addRoute('/api/menu-items/:id', SwaggerMethod.PUT, {
+SwaggerGenerator.addRoute('/api/menu-item/:id', SwaggerMethod.PUT, {
   tags: ['Menu Items'],
   summary: 'Update menu item',
   description: 'Update an existing menu item (Admin only)',
   requestSchema: updateMenuItemSchema,
 });
 
-SwaggerGenerator.addRoute('/api/menu-items/:id', SwaggerMethod.DELETE, {
+SwaggerGenerator.addRoute('/api/menu-item/:id', SwaggerMethod.DELETE, {
   tags: ['Menu Items'],
   summary: 'Delete menu item',
   description: 'Delete a menu item (Admin only)',
@@ -105,6 +116,17 @@ SwaggerGenerator.addRoute('/api/cart/:userId/items', SwaggerMethod.GET, {
   tags: ['Cart'],
   summary: 'Get cart items',
   description: "Get all items in user's cart",
+  parameters: [
+    {
+      name: 'userId',
+      in: 'path',
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+      description: "User's ID",
+    },
+  ],
 });
 
 SwaggerGenerator.addRoute('/api/cart/:userId/items', SwaggerMethod.POST, {
@@ -112,6 +134,17 @@ SwaggerGenerator.addRoute('/api/cart/:userId/items', SwaggerMethod.POST, {
   summary: 'Add to cart',
   description: "Add an item to user's cart",
   requestSchema: addToCartSchema,
+  parameters: [
+    {
+      name: 'userId',
+      in: 'path',
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+      description: "User's ID",
+    },
+  ],
 });
 
 SwaggerGenerator.addRoute('/api/cart/:userId/items/:itemId', SwaggerMethod.PUT, {
@@ -125,6 +158,26 @@ SwaggerGenerator.addRoute('/api/cart/:userId/items/:itemId', SwaggerMethod.DELET
   tags: ['Cart'],
   summary: 'Remove from cart',
   description: 'Remove an item from cart',
+  parameters: [
+    {
+      name: 'userId',
+      in: 'path',
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+      description: "User's ID",
+    },
+    {
+      name: 'itemId',
+      in: 'path',
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+      description: "Item's ID",
+    },
+  ],
 });
 
 SwaggerGenerator.addRoute('/api/cart/:userId/clear', SwaggerMethod.DELETE, {
@@ -146,11 +199,23 @@ SwaggerGenerator.addRoute('/api/orders/:userId/:orderId', SwaggerMethod.GET, {
   description: 'Get detailed information about a specific order',
 });
 
-SwaggerGenerator.addRoute('/api/orders/:userId', SwaggerMethod.POST, {
+SwaggerGenerator.addRoute('/api/order/:userId', SwaggerMethod.POST, {
   tags: ['Orders'],
   summary: 'Create order',
   description: 'Create a new order from cart items',
+  security: true,
   requestSchema: createOrderSchema,
+  parameters: [
+    {
+      name: 'userId',
+      in: 'path',
+      required: true,
+      schema: {
+        type: 'integer',
+      },
+      description: "User's ID",
+    },
+  ]
 });
 
 SwaggerGenerator.addRoute('/api/orders/:orderId/status', SwaggerMethod.PUT, {
