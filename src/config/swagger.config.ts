@@ -35,34 +35,34 @@ SwaggerGenerator.addRoute('/api/auth/login', SwaggerMethod.POST, {
 });
 
 // Restaurant Routes
-SwaggerGenerator.addRoute('/api/restaurants', SwaggerMethod.GET, {
-  tags: ['Restaurants'],
-  summary: 'Get all restaurants',
-  description: 'Retrieve all restaurants',
+SwaggerGenerator.addRoute('/api/restaurant', SwaggerMethod.GET, {
+  tags: ['Restaurant'],
+  summary: 'Get all restaurant',
+  description: 'Retrieve all restaurant',
 });
 
-SwaggerGenerator.addRoute('/api/restaurants/:id', SwaggerMethod.GET, {
-  tags: ['Restaurants'],
+SwaggerGenerator.addRoute('/api/restaurant/:id', SwaggerMethod.GET, {
+  tags: ['Restaurant'],
   summary: 'Get restaurant by ID',
   description: 'Retrieve a specific restaurant',
 });
 
-SwaggerGenerator.addRoute('/api/restaurants', SwaggerMethod.POST, {
-  tags: ['Restaurants'],
+SwaggerGenerator.addRoute('/api/restaurant', SwaggerMethod.POST, {
+  tags: ['Restaurant'],
   summary: 'Create restaurant',
   description: 'Create a new restaurant (Admin only)',
   requestSchema: createRestaurantSchema,
 });
 
-SwaggerGenerator.addRoute('/api/restaurants/:id', SwaggerMethod.PUT, {
-  tags: ['Restaurants'],
+SwaggerGenerator.addRoute('/api/restaurant/:id', SwaggerMethod.PUT, {
+  tags: ['Restaurant'],
   summary: 'Update restaurant',
   description: 'Update an existing restaurant (Admin only)',
   requestSchema: updateRestaurantSchema,
 });
 
-SwaggerGenerator.addRoute('/api/restaurants/:id', SwaggerMethod.DELETE, {
-  tags: ['Restaurants'],
+SwaggerGenerator.addRoute('/api/restaurant/:id', SwaggerMethod.DELETE, {
+  tags: ['Restaurant'],
   summary: 'Delete restaurant',
   description: 'Delete a restaurant (Admin only)',
 });
