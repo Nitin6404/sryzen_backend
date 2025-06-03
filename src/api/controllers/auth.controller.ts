@@ -15,7 +15,11 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const { user, accessToken, refreshToken } = await authService.login(email, password);
-      res.json({ user, accessToken, refreshToken });
+      if(user && accessToken && refreshToken){
+        res.json({ user, accessToken, refreshToken });
+      } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+      }
     } catch (error) {
       next(error);
     }

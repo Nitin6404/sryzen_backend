@@ -89,105 +89,96 @@ export class OrderService {
         },
       ],
     });
-
+  
     if (!order || !order.Restaurant || !order.CartItems) {
       throw new AppError(404, 'Order or related data not found');
     }
-
-    const doc = new PDFDocument();
+  
+    const doc = new PDFDocument({ margin: 50 });
     const invoicePath = path.join(__dirname, `../../invoices/invoice-${orderId}.pdf`);
-
-    // Ensure invoices directory exists
-    if (!fs.existsSync(path.dirname(invoicePath))) {
-      fs.mkdirSync(path.dirname(invoicePath), { recursive: true });
-    }
-
+  
+    // Ensure invoice folder exists
+    fs.mkdirSync(path.dirname(invoicePath), { recursive: true });
+  
     const writeStream = fs.createWriteStream(invoicePath);
     doc.pipe(writeStream);
 
+    const logoPath = path.join(__dirname, '../../assets/logo-black.png');
+    doc.image(logoPath, {
+      fit: [150, 80],
+      align: 'center',
+    });
+  
     // Header
-    doc.fontSize(25).text('Invoice', { align: 'center' });
+    doc.fontSize(20).text('INVOICE', { align: 'center' });
     doc.moveDown();
-
-    // Restaurant Details
-    doc.fontSize(14).text('Restaurant Details:', { underline: true });
-    doc
-      .fontSize(12)
-      .text(`Name: ${order.Restaurant.name}`)
-      .text(`Address: ${order.Restaurant.address}`)
-      .text(`Phone: ${order.Restaurant.phone}`);
+  
+    // Restaurant Info
+    doc.fontSize(12).text(`Restaurant: ${order.Restaurant.name}`);
+    doc.text(`Address: ${order.Restaurant.address}`);
+    doc.text(`Phone: ${order.Restaurant.phone}`);
     doc.moveDown();
-
-    // Order Details
-    doc.fontSize(14).text('Order Details:', { underline: true });
-    doc
-      .fontSize(12)
-      .text(`Order ID: ${order.id}`)
-      .text(`Date: ${order.createdAt.toLocaleString()}`)
-      .text(`Delivery Address: ${order.deliveryAddress}`);
+  
+    // Order Info
+    doc.text(`Order ID: ${order.id}`);
+    doc.text(`Date: ${new Date(order.createdAt).toLocaleString()}`);
+    doc.text(`Status: ${order.status}`);
+    doc.text(`Delivery Address: ${order.deliveryAddress}`);
     doc.moveDown();
-
-    // Ordered Items
-    doc.fontSize(14).text('Ordered Items:', { underline: true });
-    doc.moveDown();
-
+  
     // Table Header
-    const itemsTableTop = doc.y;
-    doc
-      .fontSize(12)
-      .text('Item', 50, itemsTableTop)
-      .text('Quantity', 300, itemsTableTop)
-      .text('Price', 400, itemsTableTop)
-      .text('Total', 500, itemsTableTop);
-
+    doc.font('Helvetica-Bold');
+    doc.text('Item', 50).text('Qty', 300).text('Price', 400).text('Total', 500);
     doc.moveDown();
-    let currentY = doc.y;
-
-    // Table Content
-    // Update the table content section to handle price values correctly
-    order.CartItems.forEach((item) => {
+  
+    // Table Rows
+    doc.font('Helvetica');
+    let subtotal = 0;
+  
+    for (const item of order.CartItems) {
       if (item.MenuItem) {
         const itemPrice = Number(item.MenuItem.price);
         const totalPrice = itemPrice * item.quantity;
-
+        subtotal += totalPrice;
+  
         doc
-          .fontSize(12)
-          .text(item.MenuItem.name || 'Unknown Item', 50, currentY)
-          .text(item.quantity.toString(), 300, currentY)
-          .text(`$${itemPrice.toFixed(2)}`, 400, currentY)
-          .text(`$${totalPrice.toFixed(2)}`, 500, currentY);
-        currentY += 20;
+          .text(item.MenuItem.name, 50)
+          .text(`${item.quantity}`, 300)
+          .text(`$${itemPrice.toFixed(2)}`, 400)
+          .text(`$${totalPrice.toFixed(2)}`, 500);
+        doc.moveDown();
       }
-    });
-
-    doc.moveDown();
-    doc.moveDown();
-
-    // Total and Payment Details
-    const subtotal = Number(order.totalAmount);
+    }
+  
+    // Totals
     const tax = subtotal * 0.1;
-    const total = subtotal + tax;
-    doc
-      .fontSize(12)
-      .text(`Subtotal: $${subtotal.toFixed(2)}`)
-      .text(`Tax (10%): $${tax.toFixed(2)}`)
-      .text(`Total Amount: $${total.toFixed(2)}`, { underline: true })
-      .text(`Payment Method: ${order.paymentMethod}`)
-      .text(`Payment Status: ${order.paymentStatus}`);
-
+    const grandTotal = subtotal + tax;
+  
+    doc.moveDown();
+    doc.font('Helvetica-Bold');
+    doc.text(`Subtotal: $${subtotal.toFixed(2)}`, { align: 'right' });
+    doc.text(`Tax (10%): $${tax.toFixed(2)}`, { align: 'right' });
+    doc.text(`Total: $${grandTotal.toFixed(2)}`, { align: 'right' });
+    doc.moveDown();
+  
+    // Payment Info
+    doc.font('Helvetica');
+    doc.text(`Payment Method: ${order.paymentMethod}`);
+    doc.text(`Payment Status: ${order.paymentStatus}`);
+    doc.moveDown();
+  
     // Footer
-    doc
-      .fontSize(10)
-      .text('Thank you for your order!', { align: 'center' })
-      .text('For any queries, please contact customer support.', { align: 'center' });
-
+    doc.fontSize(10).text('Thank you for your order!', { align: 'center' });
+    doc.text('For support, contact us at support@example.com', { align: 'center' });
+  
     doc.end();
-
+  
     return new Promise((resolve, reject) => {
       writeStream.on('finish', () => resolve(invoicePath));
       writeStream.on('error', reject);
     });
   }
+  
 }
 
 export default new OrderService();
