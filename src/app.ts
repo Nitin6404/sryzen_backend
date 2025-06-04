@@ -1,49 +1,49 @@
-import express from 'express';
-import swaggerUi from 'swagger-ui-express';
-import { swaggerOptions } from './swagger/swagger.config';
-import restaurantRoutes from './routes/restaurant.routes';
-import menuItemRoutes from './routes/menu-item.routes';
-import cartRoutes from './routes/cart.routes';
-import orderRoutes from './routes/order.routes';
-import { errorHandler } from './middleware/error.middleware';
+import http from 'http';
 import dotenv from 'dotenv';
-import db from './models';
+import serverConfig from './config/express.config';
+import db from './database/models';
+import logger from './utils/logger';
+import { seedAdmin } from './database/seeders/admin.seeder';
 
 dotenv.config();
 
-const app = express();
-
-app.use(express.json());
-
-// Routes
-app.use('/api/restaurants', restaurantRoutes);
-app.use('/api/menu-items', menuItemRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/orders', orderRoutes);
-
-// Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
-
-// Error Handler
-app.use(errorHandler);
-
 const PORT = process.env.PORT || 4000;
 
-const startServer = async () => {
+(async () => {
   try {
-    // Initialize database
-    await db.sequelize.sync({ force: false });
-    console.log('Database synchronized successfully');
-    
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+    // Initialize Express app
+    const app = await serverConfig();
+
+    // Initialize database with retries
+    let retries = 5;
+    while (retries) {
+      try {
+        // Force sync in development to update table structure
+        const force = process.env.NODE_ENV === 'development';
+        await db.sequelize.sync({ force });
+        logger.info(`Database synchronized successfully (force: ${force})`);
+        break;
+      } catch (err) {
+        logger.error('Database sync failed:', err);
+        retries -= 1;
+        if (retries === 0) throw err;
+        logger.info(`Retrying database sync... (${retries} attempts remaining)`);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+    }
+
+    // Seed admin user
+    await seedAdmin();
+
+    // Create HTTP server
+    const server = http.createServer(app);
+
+    // Start server
+    server.listen(PORT, () => {
+      logger.info(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   }
-};
-
-startServer();
-
-export default app;
+})();
