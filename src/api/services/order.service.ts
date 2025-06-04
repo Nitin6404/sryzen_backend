@@ -6,6 +6,9 @@ import { AppError } from '../middleware/error.middleware';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class OrderService {
   async createOrder(userId: number, data: any) {
@@ -95,7 +98,9 @@ export class OrderService {
     }
   
     const doc = new PDFDocument({ margin: 50 });
-    const invoicePath = path.join(__dirname, `../../invoices/invoice-${orderId}.pdf`);
+    const environment = process.env.NODE_ENV || 'development';
+    const dirName = environment === 'production' ? '/tmp' : __dirname;
+    const invoicePath = path.join(dirName, `../../invoices/invoice-${orderId}.pdf`);
   
     // Ensure invoice folder exists
     fs.mkdirSync(path.dirname(invoicePath), { recursive: true });
