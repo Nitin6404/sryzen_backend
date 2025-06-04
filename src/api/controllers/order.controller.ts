@@ -31,7 +31,7 @@ export class OrderController {
 
   async updateOrderStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const order = await orderService.updateOrderStatus(Number(req.params.id), req.body.status);
+      const order = await orderService.updateOrderStatus(Number(req.params.orderId), req.body.status);
       res.json(order);
     } catch (error) {
       next(error);
