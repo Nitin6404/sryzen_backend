@@ -108,8 +108,8 @@ export class OrderService {
     const writeStream = fs.createWriteStream(invoicePath);
     doc.pipe(writeStream);
 
-    const logoPath = path.join(__dirname, '../../assets/logo-black.png');
-    doc.image(logoPath, {
+    // const logoPath = path.join(__dirname, '../../assets/logo-black.png');
+    doc.image("https://res.cloudinary.com/doaggd1wa/image/upload/v1749073877/logo-black_iolzdd.png", {
       fit: [150, 80],
       align: 'center',
     });
