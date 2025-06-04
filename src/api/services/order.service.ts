@@ -7,6 +7,7 @@ import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -92,60 +93,65 @@ export class OrderService {
         },
       ],
     });
-  
+
     if (!order || !order.Restaurant || !order.CartItems) {
       throw new AppError(404, 'Order or related data not found');
     }
-  
+
     const doc = new PDFDocument({ margin: 50 });
     const environment = process.env.NODE_ENV || 'development';
     const dirName = environment === 'production' ? '/tmp' : __dirname;
     const invoicePath = path.join(dirName, `../../invoices/invoice-${orderId}.pdf`);
-  
+
     // Ensure invoice folder exists
     fs.mkdirSync(path.dirname(invoicePath), { recursive: true });
-  
+
     const writeStream = fs.createWriteStream(invoicePath);
     doc.pipe(writeStream);
 
+    const imageUrl =
+      'https://res.cloudinary.com/doaggd1wa/image/upload/v1749073877/logo-black_iolzdd.png';
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(response.data, 'binary');
+
     // const logoPath = path.join(__dirname, '../../assets/logo-black.png');
-    doc.image("https://res.cloudinary.com/doaggd1wa/image/upload/v1749073877/logo-black_iolzdd.png", {
+    doc.image(imageBuffer, {
       fit: [150, 80],
       align: 'center',
     });
-  
+
     // Header
     doc.fontSize(20).text('INVOICE', { align: 'center' });
     doc.moveDown();
-  
+
     // Restaurant Info
     doc.fontSize(12).text(`Restaurant: ${order.Restaurant.name}`);
     doc.text(`Address: ${order.Restaurant.address}`);
     doc.text(`Phone: ${order.Restaurant.phone}`);
     doc.moveDown();
-  
+
     // Order Info
     doc.text(`Order ID: ${order.id}`);
     doc.text(`Date: ${new Date(order.createdAt).toLocaleString()}`);
     doc.text(`Status: ${order.status}`);
     doc.text(`Delivery Address: ${order.deliveryAddress}`);
     doc.moveDown();
-  
+
     // Table Header
     doc.font('Helvetica-Bold');
     doc.text('Item', 50).text('Qty', 300).text('Price', 400).text('Total', 500);
     doc.moveDown();
-  
+
     // Table Rows
     doc.font('Helvetica');
     let subtotal = 0;
-  
+
     for (const item of order.CartItems) {
       if (item.MenuItem) {
         const itemPrice = Number(item.MenuItem.price);
         const totalPrice = itemPrice * item.quantity;
         subtotal += totalPrice;
-  
+
         doc
           .text(item.MenuItem.name, 50)
           .text(`${item.quantity}`, 300)
@@ -154,36 +160,35 @@ export class OrderService {
         doc.moveDown();
       }
     }
-  
+
     // Totals
     const tax = subtotal * 0.1;
     const grandTotal = subtotal + tax;
-  
+
     doc.moveDown();
     doc.font('Helvetica-Bold');
     doc.text(`Subtotal: $${subtotal.toFixed(2)}`, { align: 'right' });
     doc.text(`Tax (10%): $${tax.toFixed(2)}`, { align: 'right' });
     doc.text(`Total: $${grandTotal.toFixed(2)}`, { align: 'right' });
     doc.moveDown();
-  
+
     // Payment Info
     doc.font('Helvetica');
     doc.text(`Payment Method: ${order.paymentMethod}`);
     doc.text(`Payment Status: ${order.paymentStatus}`);
     doc.moveDown();
-  
+
     // Footer
     doc.fontSize(10).text('Thank you for your order!', { align: 'center' });
     doc.text('For support, contact us at support@example.com', { align: 'center' });
-  
+
     doc.end();
-  
+
     return new Promise((resolve, reject) => {
       writeStream.on('finish', () => resolve(invoicePath));
       writeStream.on('error', reject);
     });
   }
-  
 }
 
 export default new OrderService();
